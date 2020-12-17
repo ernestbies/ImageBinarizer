@@ -10,6 +10,7 @@ import java.rmi.RemoteException;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -339,12 +340,16 @@ public class GUI extends javax.swing.JFrame {
 
     private void jButtonBinarizeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBinarizeActionPerformed
         try {
-            imageTarget = getImageFromArray(imageBinarize());
-            ImageIcon imageIconGray = new ImageIcon(imageTarget.getScaledInstance(jLabelImageTarget.getWidth(), jLabelImageTarget.getHeight(), Image.SCALE_DEFAULT));
-            jLabelImageTarget.setIcon(imageIconGray);  
-            jButtonSaveImage.setEnabled(true);
-            jTextFieldStatus.setDisabledTextColor(Color.black);
-            jTextFieldStatus.setText("Pomyślnie przetworzono obraz wejściowy.");
+            if(jSliderPoint.getValue() >= jSliderPoint2.getValue() && jComboBoxBinarization.getSelectedIndex() == 2) {
+                JOptionPane.showMessageDialog(this, "Próg dolny musi mieć wartość mniejszą od progu górnego!");
+            } else {
+                imageTarget = getImageFromArray(imageBinarize());
+                ImageIcon imageIconGray = new ImageIcon(imageTarget.getScaledInstance(jLabelImageTarget.getWidth(), jLabelImageTarget.getHeight(), Image.SCALE_DEFAULT));
+                jLabelImageTarget.setIcon(imageIconGray);  
+                jButtonSaveImage.setEnabled(true);
+                jTextFieldStatus.setDisabledTextColor(Color.black);
+                jTextFieldStatus.setText("Pomyślnie przetworzono obraz wejściowy.");   
+            }
         } catch (NullPointerException ex) {
             jTextFieldStatus.setDisabledTextColor(Color.red);
             jTextFieldStatus.setText("Wystąpił błąd połączenia z serwerem podczas przetwarzania obrazu.");    
@@ -369,13 +374,10 @@ public class GUI extends javax.swing.JFrame {
                 imageSource = getGrayImage(image);
                 jComboBoxBinarization.setEnabled(true);
                 jButtonBinarize.setEnabled(true);
-                jTextFieldPoint.setEditable(true);
-                jTextFieldPoint.setEnabled(true);
-                jTextFieldPoint.setText("127");
                 jLabelImageTarget.setIcon(null);
                 jTextFieldStatus.setDisabledTextColor(Color.black);
+                jComboBoxBinarization.setSelectedIndex(0);
                 jTextFieldStatus.setText("Pomyślnie wczytano obraz wejściowy.");
-                jSliderPoint.setEnabled(true);
                 jButtonClear.setEnabled(true);
             } catch (IOException ex) {
                 jTextFieldStatus.setDisabledTextColor(Color.red);
@@ -397,14 +399,14 @@ public class GUI extends javax.swing.JFrame {
                 String path = file.getAbsolutePath();
                 ImageIO.write(imageTarget, "png", new File(path + ".png"));
                 jTextFieldStatus.setDisabledTextColor(Color.black);
-                jTextFieldStatus.setText("Pomyślnie zapisano obraz wyjściowy. Lokalizacja:" + path + ".png");
+                jTextFieldStatus.setText("Pomyślnie zapisano obraz wyjściowy. Lokalizacja: " + path + ".png");
             } catch (IOException ex) {
                 jTextFieldStatus.setDisabledTextColor(Color.red);
                 jTextFieldStatus.setText("Wystąpił błąd podczas zapisywania obrazu.");
             }
         } else {
-            jTextFieldStatus.setDisabledTextColor(Color.red);
-            jTextFieldStatus.setText("Wystąpił błąd podczas zapisyawwnia obrazu, ponieważ nie wybrano żadnego pliku do zapisu.");
+            jTextFieldStatus.setDisabledTextColor(Color.black);
+            jTextFieldStatus.setText("Anulowano zapisywanie obrazu wyjściowego.");
         }
     }//GEN-LAST:event_jButtonSaveImageActionPerformed
 
@@ -446,7 +448,7 @@ public class GUI extends javax.swing.JFrame {
 
     private void jComboBoxBinarizationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxBinarizationActionPerformed
         int selectedIndex = jComboBoxBinarization.getSelectedIndex();
-  
+       
         switch(selectedIndex) {
             case 0:
                 jSliderPoint.setValue(127);

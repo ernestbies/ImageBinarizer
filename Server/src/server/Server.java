@@ -18,7 +18,7 @@ public class Server implements ImageBinarizer {
     public Server(GUI g) {
         gui = g;
     }
-    
+                                                                                                                                                                                                                                          
     public void bindStub() {
         try {
             LocateRegistry.createRegistry(1099);
