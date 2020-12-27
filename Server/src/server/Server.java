@@ -77,7 +77,7 @@ public class Server implements ImageBinarizer {
                 break;   
             case 2:
                 gui.getTextArea().setText(gui.getTextArea().getText() + "\n>>>>> Binaryzacja dwuprogowa obrazu została zdalnie wywołana. Próg dolny: " + points[0] + ", próg górny: " + points[1]);
-                System.out.println("[LOG] Binaryzacja dwuoprogowa obrazu została zdalnie wywołana. Próg dolny: " + points[0] + ", próg górny: " + points[1]);
+                System.out.println("[LOG] Binaryzacja dwuprogowa obrazu została zdalnie wywołana. Próg dolny: " + points[0] + ", próg górny: " + points[1]);
                 
                 for(int i=0;i<width;i++) {
                     for(int j=0;j<height;j++) {

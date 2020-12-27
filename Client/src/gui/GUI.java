@@ -574,12 +574,12 @@ public class GUI extends javax.swing.JFrame {
     private javax.swing.JTextField jTextFieldStatus;
     // End of variables declaration//GEN-END:variables
 
-  
+    
     public BufferedImage getGrayImage(BufferedImage image) {
         int width = image.getWidth();
         int height = image.getHeight();
         imageArray = new int[width][height];
-        
+       
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
                 Color c = new Color(image.getRGB(j, i));
@@ -592,7 +592,6 @@ public class GUI extends javax.swing.JFrame {
                 imageArray[j][i] = rgb;
             }
         }
-        
         return image;
     }
     
@@ -600,15 +599,18 @@ public class GUI extends javax.swing.JFrame {
         try{
             int width = arrayImage.length;
             int height = arrayImage[1].length;
+    
             BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 
             for (int i = 0; i < height; i++) {
                 for (int j = 0; j < width; j++) {
                     Color c = new Color(arrayImage[j][i], arrayImage[j][i], arrayImage[j][i]);
+                    System.out.println(c.getRGB());
                     image.setRGB(j, i, c.getRGB());
                 }
             }
            return image;   
+           
         } catch (NullPointerException ex) {
             jTextFieldStatus.setDisabledTextColor(Color.red);
             jTextFieldStatus.setText("Wystąpił błąd połączenia z serwerem podczas przetwarzania obrazu.");
