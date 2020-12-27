@@ -605,7 +605,6 @@ public class GUI extends javax.swing.JFrame {
             for (int i = 0; i < height; i++) {
                 for (int j = 0; j < width; j++) {
                     Color c = new Color(arrayImage[j][i], arrayImage[j][i], arrayImage[j][i]);
-                    System.out.println(c.getRGB());
                     image.setRGB(j, i, c.getRGB());
                 }
             }
