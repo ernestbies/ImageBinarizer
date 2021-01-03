@@ -22,9 +22,11 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 public class GUI extends javax.swing.JFrame {
 
     private final Client client;
-    private BufferedImage imageSource;
+    private BufferedImage imageSourceOriginal;
+    private BufferedImage imageSourceGreyscale;
     private BufferedImage imageTarget;
     private int[][] imageArray;
+    private boolean showOriginalImage;
     
     public GUI() {
         initComponents();
@@ -81,6 +83,7 @@ public class GUI extends javax.swing.JFrame {
         jSliderPoint2 = new javax.swing.JSlider();
         jLabelPoint2 = new javax.swing.JLabel();
         jLabelPoint3 = new javax.swing.JLabel();
+        jButtonChangeSource = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("ImageBinarizer");
@@ -220,58 +223,18 @@ public class GUI extends javax.swing.JFrame {
         jLabelPoint3.setForeground(new java.awt.Color(0, 51, 255));
         jLabelPoint3.setText(" Próg górny");
 
+        jButtonChangeSource.setText("Oryginalny");
+        jButtonChangeSource.setEnabled(false);
+        jButtonChangeSource.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonChangeSourceActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(28, 28, 28)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jTextFieldStatus)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jPanelImageSource, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(67, 67, 67)
-                                .addComponent(jLabelSource)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                            .addComponent(jLabelPoint1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(jComboBoxBinarization, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                        .addGap(31, 31, 31))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                                .addComponent(jSliderPoint2, javax.swing.GroupLayout.DEFAULT_SIZE, 208, Short.MAX_VALUE)
-                                                .addComponent(jButtonBinarize, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addComponent(jButtonClear, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addGap(73, 73, 73)
-                                                .addComponent(jTextFieldPoint2, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addGap(41, 41, 41)
-                                                .addComponent(jLabelPoint))
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addGap(61, 61, 61)
-                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                    .addGroup(layout.createSequentialGroup()
-                                                        .addGap(10, 10, 10)
-                                                        .addComponent(jTextFieldPoint, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                    .addComponent(jLabelPoint2, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                            .addComponent(jSliderPoint, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addGap(61, 61, 61)
-                                                .addComponent(jLabelPoint3)))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
-                                .addComponent(jPanelImageTarget, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(jLabelTarget)
-                                .addGap(75, 75, 75)))))
-                .addGap(28, 28, 28))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabelAbout)
@@ -279,11 +242,61 @@ public class GUI extends javax.swing.JFrame {
                 .addComponent(jLabelAuthor)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
-                .addGap(100, 100, 100)
-                .addComponent(jButtonLoadImage)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButtonSaveImage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(100, 100, 100))
+                .addGap(28, 28, 28)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jTextFieldStatus)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addComponent(jButtonLoadImage)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButtonChangeSource, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jPanelImageSource, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addGap(67, 67, 67)
+                                .addComponent(jLabelSource)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                                .addComponent(jLabelPoint1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addComponent(jComboBoxBinarization, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                            .addGap(31, 31, 31))
+                                        .addGroup(layout.createSequentialGroup()
+                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                    .addComponent(jSliderPoint2, javax.swing.GroupLayout.DEFAULT_SIZE, 208, Short.MAX_VALUE)
+                                                    .addComponent(jButtonBinarize, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                    .addComponent(jButtonClear, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                                .addGroup(layout.createSequentialGroup()
+                                                    .addGap(73, 73, 73)
+                                                    .addComponent(jTextFieldPoint2, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                .addGroup(layout.createSequentialGroup()
+                                                    .addGap(41, 41, 41)
+                                                    .addComponent(jLabelPoint))
+                                                .addGroup(layout.createSequentialGroup()
+                                                    .addGap(61, 61, 61)
+                                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                        .addGroup(layout.createSequentialGroup()
+                                                            .addGap(10, 10, 10)
+                                                            .addComponent(jTextFieldPoint, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                        .addComponent(jLabelPoint2, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                                .addComponent(jSliderPoint, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGroup(layout.createSequentialGroup()
+                                                    .addGap(61, 61, 61)
+                                                    .addComponent(jLabelPoint3)))
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                                    .addComponent(jPanelImageTarget, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                    .addComponent(jLabelTarget)
+                                    .addGap(75, 75, 75)))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(jButtonSaveImage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(62, 62, 62)))))
+                .addGap(28, 28, 28))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -327,9 +340,10 @@ public class GUI extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jButtonClear)
                         .addGap(28, 28, 28)))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonSaveImage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButtonLoadImage, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jButtonLoadImage, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButtonChangeSource))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jTextFieldStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(13, 13, 13))
@@ -366,14 +380,16 @@ public class GUI extends javax.swing.JFrame {
         chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);        
                                 
         if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-            BufferedImage image;
             try {
-                image = ImageIO.read(new File(chooser.getSelectedFile().toString()));
-                ImageIcon imageIcon = new ImageIcon(image.getScaledInstance(jLabelImageSource.getWidth(), jLabelImageSource.getHeight(), Image.SCALE_DEFAULT));
+                imageSourceOriginal = ImageIO.read(new File(chooser.getSelectedFile().toString()));
+                imageSourceGreyscale = getGrayImage(imageSourceOriginal);
+                ImageIcon imageIcon = new ImageIcon(imageSourceGreyscale.getScaledInstance(jLabelImageSource.getWidth(), jLabelImageSource.getHeight(), imageSourceGreyscale.SCALE_DEFAULT));
+                //ImageIcon imageIcon = new ImageIcon(imageSourceOriginal.getScaledInstance(jLabelImageSource.getWidth(), jLabelImageSource.getHeight(), imageSourceGreyscale.SCALE_DEFAULT));
+                
                 jLabelImageSource.setIcon(imageIcon);
-                imageSource = getGrayImage(image);
                 jComboBoxBinarization.setEnabled(true);
                 jButtonBinarize.setEnabled(true);
+                jButtonChangeSource.setEnabled(true);
                 jLabelImageTarget.setIcon(null);
                 jTextFieldStatus.setDisabledTextColor(Color.black);
                 jComboBoxBinarization.setSelectedIndex(0);
@@ -424,7 +440,8 @@ public class GUI extends javax.swing.JFrame {
     private void jButtonClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonClearActionPerformed
         jLabelImageSource.setIcon(null);
         jLabelImageTarget.setIcon(null);
-        imageSource = null;
+        imageSourceOriginal = null;
+        imageSourceOriginal = null;
         imageTarget = null;
         imageArray = null;
         jSliderPoint.setValue(127);
@@ -435,6 +452,7 @@ public class GUI extends javax.swing.JFrame {
         jTextFieldStatus.setText("Wyczyszczono obraz wejściowy i wyjściowy.");
         jButtonBinarize.setEnabled(false);
         jButtonSaveImage.setEnabled(false);
+        jButtonChangeSource.setEnabled(false);
         jTextFieldPoint.setText("");
         jTextFieldPoint2.setText("");
         jTextFieldPoint.setEnabled(false);
@@ -516,6 +534,20 @@ public class GUI extends javax.swing.JFrame {
     private void jSliderPoint2StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSliderPoint2StateChanged
         jTextFieldPoint2.setText(String.valueOf(jSliderPoint2.getValue()));
     }//GEN-LAST:event_jSliderPoint2StateChanged
+
+    private void jButtonChangeSourceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonChangeSourceActionPerformed
+        ImageIcon imageIcon = null;
+        if(showOriginalImage){    
+           imageIcon = new ImageIcon(imageSourceGreyscale.getScaledInstance(jLabelImageSource.getWidth(), jLabelImageSource.getHeight(), BufferedImage.SCALE_DEFAULT));
+           jButtonChangeSource.setText("Oryginalny");
+        } else{
+           imageIcon = new ImageIcon(imageSourceOriginal.getScaledInstance(jLabelImageSource.getWidth(), jLabelImageSource.getHeight(), BufferedImage.SCALE_DEFAULT));
+           jButtonChangeSource.setText("Szarość");
+        }
+        showOriginalImage = !showOriginalImage;
+        jLabelImageSource.setIcon(imageIcon);
+                
+    }//GEN-LAST:event_jButtonChangeSourceActionPerformed
     
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -551,6 +583,7 @@ public class GUI extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonBinarize;
+    private javax.swing.JButton jButtonChangeSource;
     private javax.swing.JButton jButtonClear;
     private javax.swing.JButton jButtonLoadImage;
     private javax.swing.JButton jButtonSaveImage;
@@ -579,6 +612,7 @@ public class GUI extends javax.swing.JFrame {
         int width = image.getWidth();
         int height = image.getHeight();
         imageArray = new int[width][height];
+        BufferedImage newImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
        
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
@@ -588,11 +622,11 @@ public class GUI extends javax.swing.JFrame {
                 int blue = (int) (c.getBlue() * 0.114);
                 int rgb = red + green + blue;
                 Color newColor = new Color(rgb, rgb, rgb);
-                image.setRGB(j, i, newColor.getRGB());
+                newImage.setRGB(j, i, newColor.getRGB());
                 imageArray[j][i] = rgb;
             }
         }
-        return image;
+        return newImage;
     }
     
     public BufferedImage getImageFromArray(int[][] arrayImage) {
