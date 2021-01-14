@@ -383,9 +383,7 @@ public class GUI extends javax.swing.JFrame {
             try {
                 imageSourceOriginal = ImageIO.read(new File(chooser.getSelectedFile().toString()));
                 imageSourceGreyscale = getGrayImage(imageSourceOriginal);
-                ImageIcon imageIcon = new ImageIcon(imageSourceGreyscale.getScaledInstance(jLabelImageSource.getWidth(), jLabelImageSource.getHeight(), imageSourceGreyscale.SCALE_DEFAULT));
-                //ImageIcon imageIcon = new ImageIcon(imageSourceOriginal.getScaledInstance(jLabelImageSource.getWidth(), jLabelImageSource.getHeight(), imageSourceGreyscale.SCALE_DEFAULT));
-                
+                ImageIcon imageIcon = new ImageIcon(imageSourceGreyscale.getScaledInstance(jLabelImageSource.getWidth(), jLabelImageSource.getHeight(), imageSourceGreyscale.SCALE_DEFAULT));  
                 jLabelImageSource.setIcon(imageIcon);
                 jComboBoxBinarization.setEnabled(true);
                 jButtonBinarize.setEnabled(true);
