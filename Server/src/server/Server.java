@@ -37,8 +37,8 @@ public class Server implements ImageBinarizer {
         int[][] imageBinarized = new int[width][height];
         
         // Progi binaryzacji:
-        // point[0] - próg dolny
-        // point[1] - próg górny
+        // points[0] - próg dolny
+        // points[1] - próg górny
         
         // Rodzaj binaryzacji:
         // 0 - binaryzacja dolnoprogowa
